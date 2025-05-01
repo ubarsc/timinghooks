@@ -12,6 +12,9 @@ except ImportError:
     numpy = None
 
 
+__version__ = "1.0.0"
+
+
 class Timers:
     """
     Manage multiple named timers. See interval() method for example
@@ -197,5 +200,8 @@ class AllTests(unittest.TestCase):
         self.assertAlmostEqual(summ['test2']['total'], 2, places=self.places)
 
 
-if __name__ == "__main__":
+def mainCmd():
     unittest.main(module='timinghooks')
+
+if __name__ == "__main__":
+    mainCmd()

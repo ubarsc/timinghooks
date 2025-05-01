@@ -1,0 +1,26 @@
+# The installation requires pip>=23.0. If not, it will fail in rather
+# cryptic ways (depending exactly what options are used).
+#
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "timinghooks"
+dynamic = ["version"]
+authors = [
+  {name = "Neil Flood"}
+]
+description = "Support to set up custom timing hooks in Python applications"
+readme = "README.md"
+license = {text = "MIT License"}
+
+[project.scripts]
+timinghooks_tests = "timinghooks:mainCmd"
+
+[tool.setuptools.dynamic]
+version = {attr = "timinghooks.__version__"}
+
+[project.urls]
+Repository = "https://github.com/ubarsc/timinghooks.git"
