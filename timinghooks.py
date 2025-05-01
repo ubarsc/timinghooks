@@ -15,13 +15,16 @@ except ImportError:
 class Timers:
     """
     Manage multiple named timers. See interval() method for example
-    usage. The reportFromTemplate() method can be used to generate
-    a formatted report on the timings.
+    usage. The makeSummaryDict() method can be used to generate
+    summary statistics on the timings.
 
     Maintains a dictionary of pairs of start/finish times, before and
     after particular operations. These are grouped by operation names,
     and for each name, a list is accumulated of the pairs, for every
     time when this operation was carried out.
+
+    The operation names are arbitrary strings chosen by the user at each
+    point where a timer is embedded in the application code.
 
     Timing intervals can be safely nested, so some intervals can be
     contained with others.
