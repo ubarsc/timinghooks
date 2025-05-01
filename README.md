@@ -1,7 +1,7 @@
 # timinghooks
 Support to set up custom timing hooks in Python applications. The main intention is to allow a programmer to embed timing points in key locations in an application, collecting identifiable timing data on sections of code, and produce summary statistics of the collected data. This will allow an application to report in simple terms on how the running time is distributed across different key parts of the code.
 
-The timinghooks module provides the Timers class. This class will manage multiple named timers. The general idea is to have one of these for the whole application, and pass it around to any part of the code which needs timing.
+The timinghooks module provides the Timers class. An object of this class will manage multiple named timers. The general idea is to have one of these for the whole application, and pass it around to any part of the code which needs timing.
 
 The makeSummaryDict() method can be used to generate summary statistics on the timings.
 
