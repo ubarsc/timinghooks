@@ -37,21 +37,22 @@ class Timers:
                 with timings.interval('computation'):
                     # Code to do computation
 
-        template = '\n'.join([
-            "Walltime:    {walltime@total:.2f}",
-            "Reading:     {reading@total:.2f}",
-            "Computation: {computation@total:.2f}"
-        ])
-        reportStr = timings.reportFromTemplate(template)
-        print(reportStr)
+        summary = timings.makeSummaryDict()
+        print(summary)
 
-    This would report the total time spent within each of the named interval
-    code blocks.
+    The resulting summary dictionary would be something like::
+
+        {'walltime': ['total': 12.345, 'min': 1.234, ......],
+         'reading': ['total': 3.456, 'min': 0.234, ......],
+         'computation': ['total': 9.123, 'min': 1.012, ......]
+        }
+
+    All times are in seconds.
 
     These 'with interval' blocks can be scattered through an application's
-    code, all using the same timings object. The report can be generated
-    at the end of the application to present to a user, showing how the
-    key parts of the application compare in time taken.
+    code, all using the same timings object. The summary dictionary can be
+    used to generate a report at the end of the application to present to a
+    user, showing how the key parts of the application compare in time taken.
 
     """
     def __init__(self):
@@ -124,37 +125,6 @@ class Timers:
                 'lowerq': pcnt25, 'median': pcnt50, 'upperq': pcnt75,
                 'mean': meanVal, 'count': len(intervals)}
         return d
-
-    def reportFromTemplate(self, templateStr):
-        """
-        Given a template string, produce a formatted report on timings
-
-        The template string should be a Python format template. The
-        format() method on this string will be called, given a dictionary
-        of field names. The available field names are created from
-        the timer names and the summary statistic names.
-
-        All field names are of the form <timer name>@<statistic name>.
-        The available statistics are total, min, max, mean, median,
-        upperq, count.
-
-        For example, if the user has given a timing interval named "reading",
-        then the available field names will include "reading@total",
-        "reading@min", etc.
-
-        The most commonly used statistic will often be "total", but the
-        others are available if required.
-
-        Returns the formatted report as a single string.
-        """
-        summary = self.makeSummaryDict()
-        fieldDict = {}
-        for intervalName in summary:
-            for stat in summary[intervalName]:
-                fieldName = "{}@{}".format(intervalName, stat)
-                fieldDict[fieldName] = summary[intervalName][stat]
-        report = templateStr.format(**fieldDict)
-        return report
 
     def __getstate__(self):
         """
