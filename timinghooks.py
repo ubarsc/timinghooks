@@ -28,18 +28,25 @@ class Timers:
 
         timings = Timers()
         with timings.interval('walltime'):
-            with timings.interval('reading'):
-                # Code to do reading operations
+            for i in range(count):
+                # Some code with no specific timer
 
-            with timings.interval('computation'):
-                # Code to do computation
+                with timings.interval('reading'):
+                    # Code to do reading operations
+
+                with timings.interval('computation'):
+                    # Code to do computation
 
         template = '\n'.join([
-            "Walltime: {walltime@total:.2f}",
-            "Reading:  {reading@total:.2f}"
+            "Walltime:    {walltime@total:.2f}",
+            "Reading:     {reading@total:.2f}",
+            "Computation: {computation@total:.2f}"
         ])
         reportStr = timings.reportFromTemplate(template)
         print(reportStr)
+
+    This would report the total time spent within each of the named interval
+    code blocks.
 
     These 'with interval' blocks can be scattered through an application's
     code, all using the same timings object. The report can be generated
@@ -166,3 +173,10 @@ class Timers:
         self.lock = threading.Lock()
         with self.lock:
             self.__dict__.update(state)
+
+
+def tests():
+    """
+    Run some tests
+    """
+    
