@@ -4,7 +4,12 @@ A class to support placement of timing points in a Python application.
 import time
 import threading
 import contextlib
-import numpy
+import unittest
+
+try:
+    import numpy
+except ImportError:
+    numpy = None
 
 
 class Timers:
@@ -111,16 +116,20 @@ class Timers:
         """
         Make some summary statistics, and return them in a dictionary
         """
+        if numpy is None:
+            print("Timers.makeSummaryDict() requires numpy")
+            return
+
         d = {}
         for name in self.pairs:
             intervals = numpy.array(self.getDurationsForName(name))
-            tot = intervals.sum()
-            minVal = intervals.min()
-            maxVal = intervals.max()
-            meanVal = intervals.mean()
-            pcnt25 = numpy.percentile(intervals, 25)
-            pcnt50 = numpy.percentile(intervals, 50)
-            pcnt75 = numpy.percentile(intervals, 75)
+            tot = float(intervals.sum())
+            minVal = float(intervals.min())
+            maxVal = float(intervals.max())
+            meanVal = float(intervals.mean())
+            pcnt25 = float(numpy.percentile(intervals, 25))
+            pcnt50 = float(numpy.percentile(intervals, 50))
+            pcnt75 = float(numpy.percentile(intervals, 75))
             d[name] = {'total': tot, 'min': minVal, 'max': maxVal,
                 'lowerq': pcnt25, 'median': pcnt50, 'upperq': pcnt75,
                 'mean': meanVal, 'count': len(intervals)}
@@ -145,8 +154,45 @@ class Timers:
             self.__dict__.update(state)
 
 
-def tests():
+class AllTests(unittest.TestCase):
     """
-    Run some tests
+    Run all tests
     """
-    
+    places = 2
+
+    def test_single(self):
+        t = Timers()
+        with t.interval('test1'):
+            time.sleep(2)
+        summ = t.makeSummaryDict()
+        self.assertAlmostEqual(summ['test1']['total'], 2, places=self.places)
+
+    def test_multiple(self):
+        t = Timers()
+        with t.interval('test2'):
+            time.sleep(1)
+
+        with t.interval('test2'):
+            time.sleep(2)
+
+        with t.interval('test3'):
+            time.sleep(2.5)
+
+        summ = t.makeSummaryDict()
+        self.assertAlmostEqual(summ['test2']['total'], 3, places=self.places)
+        self.assertAlmostEqual(summ['test3']['total'], 2.5, places=self.places)
+
+    def test_nested(self):
+        t = Timers()
+        with t.interval('test1'):
+            time.sleep(1)
+            with t.interval('test2'):
+                time.sleep(2)
+
+        summ = t.makeSummaryDict()
+        self.assertAlmostEqual(summ['test1']['total'], 3, places=self.places)
+        self.assertAlmostEqual(summ['test2']['total'], 2, places=self.places)
+
+
+if __name__ == "__main__":
+    unittest.main(module='timinghooks')
