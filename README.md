@@ -1,11 +1,11 @@
 # timinghooks
 Support to set up custom timing hooks in Python applications. The main intention is to allow a programmer to embed timing points in key locations in an application, collecting identifiable timing data on sections of code, and produce summary statistics of the collected data. This will allow an application to report in simple terms on how the running time is distributed across different key parts of the code.
 
-The timinghooks module provides the Timers class. An object of this class will manage multiple named timers. The general idea is to have one of these for the whole application, and pass it around to any part of the code which needs timing.
+The timinghooks module provides the `Timers` class. An object of this class will manage multiple named timers. The general idea is to have one of these for the whole application, and pass it around to any part of the code which needs timing.
 
-The makeSummaryDict() method can be used to generate summary statistics on the timings.
+The `makeSummaryDict()` method can be used to generate summary statistics on the timings.
 
-Maintains a dictionary of pairs of start/finish times, before and after particular operations. These are grouped by operation names, and for each name, a list is accumulated of the pairs, for every time when this operation was carried out.
+Maintains a dictionary of pairs of start/finish times (in seconds), before and after particular operations. These are grouped by operation names, and for each name, a list is accumulated of the pairs, for every time when this operation was carried out.
 
 The operation names are arbitrary strings chosen by the user at each point where a timer is embedded in the application code.
 
@@ -37,6 +37,6 @@ The resulting summary dictionary would be something like
  'computation': ['total': 9.123, 'min': 1.012, ......]
 }
 ```
-All times are in seconds.
+In practice, one would select relevant entries in this summary dictionary to generate a human-readable report on timings. The `total` entry for each timer is usually the most interesting, the others give some idea of variability.
 
-These 'with interval' blocks can be scattered through an application's code, all using the same timings object. The summary dictionary can be used to generate a report at the end of the application to present to a user, showing how the key parts of the application compare in time taken.
+These "with interval" blocks can be scattered through an application's code, all using the same timings object. The summary dictionary can be used to generate a report at the end of the application to present to a user, showing how the key parts of the application compare in time taken.
