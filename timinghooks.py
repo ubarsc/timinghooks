@@ -203,5 +203,6 @@ class AllTests(unittest.TestCase):
 def mainCmd():
     unittest.main(module='timinghooks')
 
+
 if __name__ == "__main__":
     mainCmd()
